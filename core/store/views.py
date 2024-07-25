@@ -128,11 +128,7 @@ def login_view(request):
 
 
 def logout_view(request):
-    # logout(request)
-    # messages.info(request, 'Logged out successfully')
     logout(request)
-    # return HttpResponseRedirect(reverse('home') + '?user=anonymous')
-    # return redirect('home')
     return render(request, 'Logout.html',{})
 
 
@@ -141,40 +137,7 @@ def logout_view(request):
 def cart_view(request):
     user = request.user
     cart_items = CartItem.objects.filter(user=user).select_related('book')  # Optimize query
-    # order=Order.objects.create(user=user)
-    # order.user=user
-    # order.set(items=cart_items)
-    # order.items=cart_item
-    # order.set_items(cart_items)
-    # order.items.set(cart_items)
-    # order.save()
-
-# Check if item already exists in cart for the user
-    # existing_item = Cart.objects.filter(user=user, book=book).first()
-    # order = Order.objects.filter(user=user).first()
-    # order.objects.all().delete()
-    # Order.objects.all().delete()
-    # if order:
-    #     print("order is already",order.user)
-    
-    # else:
-        # order=Order.objects.create(user=user)
-        # order.items.set(cart_items)
-        # order.save()
-
-
-
-
-    # if existing_item:
-    #     existing_item.quantity += 1
-    #     existing_item.save()
-    #     messages.info(request, f'Quantity of "{book.title}" in cart updated to {user.username}')
-    # else:
-    #     new_cart_item = CartItem.objects.create(user=user, book=book)
-    #     messages.info(request, f'"{book.title}" added to your cart')
-
-
-    # def get_total_price(self):
+  
     total = 0
     for item in cart_items.all():
         total += item.get_total_price()
@@ -208,35 +171,17 @@ def add_to_cart(request, book_id):
     if existing_item:
         existing_item.quantity += 1
         existing_item.save()
-        messages.info(request, f'Quantity of "{book.title}" in cart updated to {user.username}')
+        # messages.info(request, f'Quantity of "{book.title}" in cart updated to {user.username}')
     else:
         new_cart_item = CartItem.objects.create(user=user, book=book)
-        messages.info(request, f'"{book.title}" added to your cart')
+        # messages.info(request, f'"{book.title}" added to your cart')
 
-    return redirect('home')  # Redirect back to the home page
-
-
-
-# @login_required(login_url='/login/')  # Require login for add_to_cart
-# def remove_from_cart(request, book_id):
-#     user = request.user
-
-#     try:
-#         book = Book.objects.get(pk=book_id)
-#     except Book.DoesNotExist:
-#         messages.info(request, 'Book not found')
-#         return redirect('home')
-
-#     # Check if item already exists in cart for the user
-#     # existing_item = Cart.objects.filter(user=user, book=book).first()
-#     existing_item = CartItem.objects.filter(user=user, book=book).first()
-#     existing_item.delete()
-#     print("delted: ",existing_item)
-
-#     return redirect('cart')  # Redirect back to the home page
+    return redirect('home')  
 
 
-@login_required(login_url='/login/')  # Require login for add_to_cart
+
+
+@login_required(login_url='/login/')  
 def remove_from_cart(request, book_id):
     user = request.user
 
@@ -246,7 +191,6 @@ def remove_from_cart(request, book_id):
         messages.info(request, 'Book not found')
         return redirect('home')
 
-    # Find the CartItem object for the user and book
     existing_item = CartItem.objects.filter(user=user, book=book).first()
 
     if existing_item:
@@ -259,11 +203,11 @@ def remove_from_cart(request, book_id):
         print(request, f'"{book.title}" not in your cart')
 
 
-    return redirect('cart')  # Redirect back to the cart page
+    return redirect('cart')  
 
 
 
-@login_required(login_url='/login/')  # Require login for add_to_cart
+@login_required(login_url='/login/')  
 def checkout(request):
     user = request.user
     item=CartItem.objects.filter(user=user)
@@ -271,22 +215,15 @@ def checkout(request):
         print("item exist: ",item)
     else:
         print("item is not present",item)
-    # item=request.cart_item
-    # try:
-    #     book = Book.objects.get(pk=book_id)
-    # except Book.DoesNotExist:
-    #     messages.info(request, 'Book not found')
-    #     return redirect('home')
-
-    # Check if item already exists in cart for the user
-    # existing_item = Cart.objects.filter(user=user, book=book).first()
-    # items = CartItem.objects.filter(user=user, book=book).first()
+   
     try:
         order=Order.objects.create(user=user )
         order.items.set(item)
         order.save()
         item.delete()
-        return redirect(request,'checkout.html')
+        # return redirect('checkout')
+        return render(request, 'checkout.html')
+
     except Exception as e:
         print(e)
         return redirect('home')
