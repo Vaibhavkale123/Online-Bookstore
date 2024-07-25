@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Online Bookstore - Book List</title>
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+ <style>
+   .card-img-top {
+     height: 300px; /* Adjust image height as needed */
+     width: 700px;
+     /* object-fit: cover; Ensure image fills the container */
+   }
+ </style>
+{% csrf_token %}
+</head>
+<body>
+{% include 'navbar.html' with user=user %}
+{% if messages %}
+     <div class="alert alert-primary" role="alert">
+       {% for message in messages %}
+      {{ message }}
+       {% endfor %} 
+      </div> 
+      {% endif %}
+
+      
+      
+
+ <div class="container mt-5">
+  <form action="{% url 'search' %}" method="get">
+    <div class="form-group">
+      <label for="search">Search Books:</label>
+      <input type="text" class="form-control" id="search" name="search" placeholder="Enter keywords">
+    </div>
+    <button type="submit" class="btn btn-primary">Search</button>
+  </form>
+  
+
+
+
+
+
+  <div class="toast-container position-sticky bottom-0 right-0 p-3">
+    <div id="liveToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast-header">
+        <strong class="me-auto">Book Added</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div class="toast-body">
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+   <h1 class="mb-4">Book List</h1>
+   <div class="row">
+     {% for book in books %}
+       <div class="col-md-3 mb-4">
+         <div class="card">
+           <img src="/media/{{ book.image }}" class="card-img-top" alt="{{ book.title }}">
+           <div class="card-body">
+             <h5 class="card-title">{{ book.title }}</h5>
+             <p class="card-text">by {{ book.author }}</p>
+             <p class="card-text">{{ book.description }}</p>
+
+             <button id="add-to-cart-{{ book.id }}" class="btn btn-warning add-to-cart-btn" data-book-id="{{ book.id }}">Add to Cart</button>
+           </div>
+         </div>
+       </div>
+     {% endfor %}
+   </div>
+
+ 
+ </div>
+ 
+
+ 
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>  
+
+
+ <div class="toast-container position-fixed bottom-0 right-0 p-3">
+   <div id="liveToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
+     <div class="toast-header">
+       <strong class="me-auto">Book Added</strong>
+       <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+     </div>
+     <div class="toast-body">
+       </div>
+   </div>
+ </div>
+ 
+
+
+
+
+ <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+ <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+ <script>
+  $(document).ready(function() {
+    $('.add-to-cart-btn').click(function(event) {
+      var bookId = $(this).data('bookId');
+      var csrftoken = $('[name="csrfmiddlewaretoken"]').attr('value');  // Get CSRF token from cookie
+      var bookTitle = $(this).data('title');
+      
+      $.ajax({
+        url: '/add-to-cart/' + bookId,
+        type: 'POST',
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader("X-CSRFToken", csrftoken);  
+        },
+        success: function(response) {+
+          alert('Book has been added to your cart!')
+        
+      
+          // $('#liveToast .toast-body').text('Book has been added to your cart!');
+          // $('.toast').toast('show'); // Now use the specific toast ID
+     
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+        
+        }
+      });
+    });
+  });
+ </script>
+
+</body>
+</html>

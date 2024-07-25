@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Bookstore - Book List</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  {% include 'navbar.html' %}
+  {% if messages %}
+     <div class="alert alert-primary" role="alert">
+       {% for message in messages %}
+      {{ message }}
+       {% endfor %} 
+      </div> 
+      {% endif %}
+<div class="container my-3">
+  <h1 style="text-align: center;">Login</h1>
+  <form method="post">
+  {% csrf_token %}
+  <div class="mb-3">
+    <label for="exampleInputEmail1"  class="form-label">username</label>
+    <input type="text" name="username" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+    
+  </div>
+  <div class="mb-3">
+    <label for="exampleInputPassword1"   class="form-label">Password</label>
+    <input type="password" name="password" class="form-control" id="exampleInputPassword1">
+  </div>
+
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>    
+</form>
+  <p class="text my-3">Create account <a href="/register">Register</a></p>
+
+</div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
