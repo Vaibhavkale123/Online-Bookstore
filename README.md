@@ -32,6 +32,3 @@ The Online Bookstore is a full-fledged ecommerce website for buying and selling 
 3. Proceed to checkout to complete your purchase
 4. View your order history
 
-## Contributing
-
-We welcome contributions to improve The Online Bookstore. Please fork the repository and submit a pull request with your changes.
