@@ -32,3 +32,8 @@ The Online Bookstore is a full-fledged ecommerce website for buying and selling 
 3. Proceed to checkout to complete your purchase
 4. View your order history
 
+## Screenshots
+
+![Home Screenshot](/screenshots/home.png)
+
+![Cart Screenshot](/screenshots/cart.png)
