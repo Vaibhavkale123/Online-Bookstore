@@ -24,18 +24,6 @@ def home(request):
     return render(request, "home.html", {"books": books})
 
 def register_view(request):
-    # if request.method == 'POST':
-    #     form = CustomUserCreationForm(request.POST)
-    #     if form.is_valid():
-    #         form.save()
-    #         email = form.cleaned_data.get('email')
-    #         password = form.cleaned_data.get('password1')
-    #         user = authenticate(email=email, password=password)
-    #         if user is not None:
-    #             login(request, user)
-    #             return redirect('home')
-    # else:
-        #     form = CustomUserCreationForm()
 
     if request.method == 'POST':
         first_name= request.POST.get('firstname')
@@ -65,43 +53,6 @@ def register_view(request):
         # messages.info(request,"account created successesfully")
     return render(request, 'signup.html', { })
 
-# def login_view(request):
-#     if request.method == 'POST':
-#         username= request.POST.get ('username')
-#         password= request.POST.get('password')
-#         # user=User.objects.filter(username=username)
-#         # user=authenticate(request,user)
-#         print("username: ",username," and password: ",password)
-#         user = authenticate(request, username=username, password=password)
-#         # if user.exists():
-#         if user is not None:
-#             login(request,user)
-#             messages.info(request,'Login Succesfully')
-#             return redirect('home')
-#         else:
-#             messages.info(request,'Something goes wrong..please try again')
-  
-
-#     return render(request, 'Login.html',{})
-
-
-# def login_view(request):
-#     if request.method == 'POST':
-#         username = request.POST.get('username')
-#         password = request.POST.get('password')
-
-#         print("username: ", username, " and password: ", password)
-#         user = authenticate(request, username=username, password=password)
-#         print( user)
-
-#         if user is not None:
-#             print("User is authenticated:", user)
-#             login(request, user)
-#             messages.info(request, 'Login Successfully')
-#             return redirect('home')
-#         else:
-#             messages.info(request, 'Invalid username or password')
-#     return render(request, 'Login.html', {})
 
 def login_view(request):
     if request.method == 'POST':
@@ -163,18 +114,20 @@ def add_to_cart(request, book_id):
         messages.info(request, 'Book not found')
         return redirect('home')
 
-    # Check if item already exists in cart for the user
-    # existing_item = Cart.objects.filter(user=user, book=book).first()
+    
     existing_item = CartItem.objects.filter(user=user, book=book).first()
-
-
+    # print("status: ",existing_item.status)
     if existing_item:
-        existing_item.quantity += 1
-        existing_item.save()
-        # messages.info(request, f'Quantity of "{book.title}" in cart updated to {user.username}')
+        if existing_item.status==False:
+            existing_item.quantity += 1
+            existing_item.save()
+            # messages.info(request, f'Quantity of "{book.title}" in cart updated to {user.username}')
+        else:
+            new_cart_item = CartItem.objects.create(user=user, book=book)
     else:
         new_cart_item = CartItem.objects.create(user=user, book=book)
         # messages.info(request, f'"{book.title}" added to your cart')
+        print("cart should be created")
 
     return redirect('home')  
 
@@ -220,7 +173,13 @@ def checkout(request):
         order=Order.objects.create(user=user )
         order.items.set(item)
         order.save()
-        item.delete()
+        # item.objects.status=True
+        for item in item:
+            item.status = True
+            item.save()
+        
+        
+        # item.delete()
         # return redirect('checkout')
         return render(request, 'checkout.html')
 
@@ -236,3 +195,9 @@ def search(request):
     else:
         books = []  
     return render(request, 'search_results.html', {'books': books})
+
+
+def book(request, book_id):
+    book=Book.objects.filter(id=book_id)
+    return render(request, 'Book.html', {'book': book})
+    

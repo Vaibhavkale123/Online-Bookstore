@@ -24,6 +24,8 @@
                 </thead>
                 <tbody>
                     {% for item in cart_items %}
+                    {% if item.status == 0 %}
+                    
                     <tr>
                         <td>{{ item.book.title }}</td>
                         <td>₹ {{ item.book.price }}</td>
@@ -35,8 +37,10 @@
                                 <button type="submit" class="btn btn-danger">Remove</button>
                             </form>
                         </td>
+                        <td>₹ {{ item.status }}</td>
                     </tr>
-                   
+
+                   {% endif %}
                     {% endfor %}
                 </tbody>
             </table>

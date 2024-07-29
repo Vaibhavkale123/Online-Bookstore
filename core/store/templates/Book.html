@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+    <title>Document</title>
+</head>
+<body>
+{% include 'navbar.html' with user=user %}
+
+    <div class="container">
+        
+        <h1>Book Details</h1>
+        <div class="">
+        <!-- {% for book in book %}// -->
+       
+            <img src="/media/{{ book.image }}" class="card-img-top h-30 w-50 " alt="{{ book.title }}">
+            <div class="">
+              <h5 class="">{{ book.title }}</h5>
+              <p class="">{{ book.author }}</p>
+              <p class="">{{ book.description }}</p>
+              {%if user.is_authenticated%}
+              <button id="add-to-cart-{{ book.id }}" class="btn btn-warning add-to-cart-btn mt-auto" data-book-id="{{ book.id }}">Add to Cart</button>
+              {%endif%}
+    
+            </div>
+        <!-- {% endfor %} -->
+        </div>
+    </div>
+  
+
+ <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+ <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>
